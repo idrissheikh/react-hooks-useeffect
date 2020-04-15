@@ -1,70 +1,44 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef, useCallback } from "react";
 import "./App.css";
-import { setTimeout } from "timers";
+import { Button } from "./Button";
 
 export default function App() {
-  const [tall, setTall] = useState(0);
-  const [title, setTitle] = useState("");
-  //const [antallclick, setAntallClick] = useState(0);
-  //const [farge, setFarge] = useState("");
+  const [counter, setCounter] = useState(0);
 
-  const handelTitle = () => setTitle("Ac Milan ");
-  const titleReset = () => setTitle("Idris Sheikh");
-  // const handelfarge = () => setFarge("Black");
+  const amountRef = useRef();
+
+  const listOfCount = [1, 3, 5, 8];
 
   useEffect(() => {
-    console.log("inside effect 1");
-    document.title = title;
-    return () => {
-      setTimeout(() => {
-        setTitle("");
-        console.log("Title be changed and cleanUp");
-      }, 1000);
-    };
-    console.log(title);
-  }, [title]);
+    amountRef.current.focus();
+  });
 
   useEffect(() => {
-    console.log("inside effect 2");
-    document.title = "You have clicked " + tall + " times";
-    console.log(tall);
-  }, [tall]);
+    document.title = "You have clicked " + counter + " times";
+  }, [counter]);
 
-  // function antallClick() {
-  //   if (handelTitle ) {
-  //     setAntallClick(antallclick + 1);
-  //   }
-  // }
-
-  function addTall() {
-    setTall(tall + 1);
-  }
-  function minstTall() {
-    setTall(tall - 1);
-  }
-
-  function ganger2() {
-    setTall(tall * 2);
-  }
+  const onclick = useCallback(
+    n => {
+      setCounter(c => c + n);
+    },
+    [setCounter]
+  );
 
   return (
-    <div>
-      <button className="btn btn-primary" onClick={addTall}>
-        +
-      </button>
+    <div className="container txt-center pt-7">
+      <input ref={amountRef} className="mt-5" />
       <br />
-      <button className="btn btn-primary" onClick={minstTall}>
-        -
-      </button>
+      {listOfCount.map(count => (
+        <Button counterfn={onclick} label={count} n={count} key={count} />
+      ))}
+
+      <Button counterfn={onclick} label="cont up" n={1} />
       <br />
-      <button onClick={ganger2}> * </button>
+      <span> result = {counter}</span>
       <br />
+      <span className="mt-3"> ___________________________</span>
+
       <br />
-      <button onClick={handelTitle}>change title </button>
-      <br />
-      <button onClick={titleReset}>reset Title </button>
-      <br />
-      <span>{tall}</span> <br />
     </div>
   );
 }
